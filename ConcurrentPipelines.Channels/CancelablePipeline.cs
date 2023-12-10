@@ -16,7 +16,7 @@ internal class CancelablePipeline : IPipeline
         /*
          * [startChannel] -> [heavyOperationChannel] -> [endChannel]
          */
-        var startChannel = Channel.CreateUnbounded<int>(); // Want more? Check what happen when channels will be bounded
+        var startChannel = Channel.CreateUnbounded<int>();
         var heavyOperationChannel = Channel.CreateUnbounded<int>();
         var endChannel = Channel.CreateUnbounded<int>();
 
@@ -27,7 +27,7 @@ internal class CancelablePipeline : IPipeline
             // Pass data to the next channel
             // ReSharper disable once MethodSupportsCancellation
             await heavyOperationChannel.Writer.WriteAsync(i);
-            //await heavyOperationChannel.Writer.WriteAsync(i, cts.Token);
+            // heavyOperationChannel.Writer.TryWrite(i);
         }, cts.Token);
 
         var heavyOperationTask = heavyOperationChannel.Reader.RunInBackground(async i =>
@@ -40,7 +40,7 @@ internal class CancelablePipeline : IPipeline
             // Pass data to the next channel
             // ReSharper disable once MethodSupportsCancellation
             await endChannel.Writer.WriteAsync(i);
-            //await endChannel.Writer.WriteAsync(i,cts.Token);
+            // endChannel.Writer.TryWrite(i);
         }, cts.Token);
 
         var endTask = endChannel.Reader.RunInBackground(i =>
@@ -52,9 +52,7 @@ internal class CancelablePipeline : IPipeline
         // Produce data
         foreach (var i in Enumerable.Range(1, 10))
         {
-            // ReSharper disable once MethodSupportsCancellation
-            await startChannel.Writer.WriteAsync(i);
-            //await startChannel.Writer.WriteAsync(i, cts.Token);
+            await startChannel.Writer.WriteAsync(i, cts.Token);
         }
 
         try

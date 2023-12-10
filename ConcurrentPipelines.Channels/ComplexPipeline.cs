@@ -12,9 +12,9 @@ internal class ComplexPipeline : IPipeline
     public async Task RunAsync()
     {
         /*
-         *                                       | [resizeFullHdBlock] |
-         * [downloadBlock] -> [broadcastBlock] ->|                     | -> [saveBlock]
-         *                                       |   [resize2KBlock]   |
+         *                      | [resizeFullHdChannel] |
+         * [downloadChannel] -> |                       | -> [saveChannel]
+         *                      |   [resize2KChannel]   |
          */
         var downloadChannel = Channel.CreateUnbounded<DownloadInfo>();
         var resizeFullHdChannel = Channel.CreateUnbounded<ImageInfo>();
@@ -33,8 +33,11 @@ internal class ComplexPipeline : IPipeline
             await stream.CopyToAsync(ms);
 
             // Broadcast message
-            await resizeFullHdChannel.Writer.WriteAsync(new ImageInfo(downloadInfo.Id, await GetStreamCopyAsync(ms)));
-            await resize2KChannel.Writer.WriteAsync(new ImageInfo(downloadInfo.Id, await GetStreamCopyAsync(ms)));
+            var resizeFhd = resizeFullHdChannel.Writer.WriteAsync(new ImageInfo(downloadInfo.Id, await GetStreamCopyAsync(ms)));
+            var resize2K = resize2KChannel.Writer.WriteAsync(new ImageInfo(downloadInfo.Id, await GetStreamCopyAsync(ms)));
+
+            await resizeFhd;
+            await resize2K;
         });
 
         // Resizing image to FHD

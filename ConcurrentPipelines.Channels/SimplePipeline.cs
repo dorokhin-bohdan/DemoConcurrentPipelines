@@ -1,5 +1,4 @@
-﻿using ConcurrentPipelines.Channels.Extensions;
-using ConcurrentPipelines.Common.Helpers;
+﻿using ConcurrentPipelines.Common.Helpers;
 using ConcurrentPipelines.Common.Interfaces;
 using System.Threading.Channels;
 
@@ -9,25 +8,30 @@ internal class SimplePipeline : IPipeline
 {
     public async Task RunAsync()
     {
-        var multipleChannel = Channel.CreateUnbounded<int>();
-        var printChannel = Channel.CreateUnbounded<int>();
-
         /*
          * [multipleChannel] -> [printChannel]
          */
-        var multipleTask = multipleChannel.Reader.RunInBackground(async num =>
-        {
-            ConsoleHelper.PrintBlockMessage("MultipleChannel", $"Multiplying {num} by 2...");
-            var doubledNum = num * 2;
+        var multipleChannel = Channel.CreateUnbounded<int>();
+        var printChannel = Channel.CreateUnbounded<int>();
 
-            // Pass result to the next channel
-            await printChannel.Writer.WriteAsync(doubledNum);
+        var multipleTask = Task.Run(async delegate
+        {
+            await foreach (var item in multipleChannel.Reader.ReadAllAsync())
+            {
+                ConsoleHelper.PrintBlockMessage("MultipleChannel", $"Multiplying {item} by 2...");
+                var doubledNum = item * 2;
+
+                // Pass result to the next channel
+                await printChannel.Writer.WriteAsync(doubledNum);
+            }
         });
 
-        var printTask = printChannel.Reader.RunInBackground(num =>
+        var printTask = Task.Run(async delegate
         {
-            ConsoleHelper.PrintBlockMessage("PrintChannel", $"Received: {num}");
-            return Task.CompletedTask;
+            await foreach (var item in printChannel.Reader.ReadAllAsync())
+            {
+                ConsoleHelper.PrintBlockMessage("PrintChannel", $"Received: {item}");
+            }
         });
 
         // Produce data

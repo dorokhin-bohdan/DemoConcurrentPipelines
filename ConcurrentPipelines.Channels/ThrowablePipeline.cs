@@ -9,9 +9,10 @@ internal class ThrowablePipeline : IPipeline
 {
     public async Task RunAsync()
     {
-        // Divide channel
+        /*
+         * [divideChannel] -> [printChannel]
+         */
         var divideChannel = Channel.CreateUnbounded<(int x, int y)>();
-        // Print channel
         var printChannel = Channel.CreateUnbounded<double>();
 
         var divideTask = divideChannel.Reader.RunInBackground(tuple =>
@@ -30,16 +31,13 @@ internal class ThrowablePipeline : IPipeline
             {
                 divideChannel.Writer.TryComplete(e); // Important to pass exception to the channel
                 printChannel.Writer.TryComplete(e); // Propagate next channel
+                // throw; // What will happen if uncomment?
             }
-
-            return Task.CompletedTask;
         });
 
         var printTask = printChannel.Reader.RunInBackground(num =>
         {
-            ConsoleHelper.PrintBlockMessage("DivideBlock", $"Result ={num}");
-
-            return Task.CompletedTask;
+            ConsoleHelper.PrintBlockMessage("DivideBlock", $"Result = {num}");
         });
 
         // Produce data
