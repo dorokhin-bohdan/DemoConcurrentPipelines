@@ -2,8 +2,8 @@
 
 #region SimplePipeline
 
-//Console.WriteLine("Simple Channels Pipeline");
-//await new SimplePipeline().RunAsync();
+Console.WriteLine("Simple Channels Pipeline");
+await new SimplePipeline().RunAsync();
 
 #endregion
 
@@ -16,8 +16,8 @@
 
 #region 
 
-Console.WriteLine("Cancelable Channels Pipeline");
-await new CancelablePipeline().RunAsync();
+//Console.WriteLine("Cancelable Channels Pipeline");
+//await new CancelablePipeline().RunAsync();
 
 #endregion
 

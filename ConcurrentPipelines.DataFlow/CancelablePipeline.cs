@@ -14,7 +14,7 @@ internal class CancelablePipeline : IPipeline
 
         var executionOption = new ExecutionDataflowBlockOptions
         {
-            BoundedCapacity = DataflowBlockOptions.Unbounded, // Want more? Check what happen when block will be bounded
+            BoundedCapacity = DataflowBlockOptions.Unbounded,
             CancellationToken = cts.Token,
         };
         var linkOptions = new DataflowLinkOptions { PropagateCompletion = true };
@@ -36,7 +36,13 @@ internal class CancelablePipeline : IPipeline
         }, executionOption);
 
         var endBlock =
-            new ActionBlock<int>(i => ConsoleHelper.PrintBlockMessage("EndBlock", $"Operation #{i} completed..."));
+            new ActionBlock<int>(i => ConsoleHelper.PrintBlockMessage("EndBlock", $"Operation #{i} completed..."), executionOption);
+
+        /*
+         * [startChannel] -> [heavyOperationChannel] -> [endChannel]
+         */
+        startBlock.LinkTo(heavyOperationBlock, linkOptions);
+        heavyOperationBlock.LinkTo(endBlock, linkOptions);
 
         // Request cancellation
         cts.CancelAfter(delay * 4);
@@ -44,14 +50,9 @@ internal class CancelablePipeline : IPipeline
         // Produce data
         foreach (var i in Enumerable.Range(1, 10))
         {
-            await startBlock.SendAsync(i, cts.Token);
+            // ReSharper disable once MethodSupportsCancellation
+            await startBlock.SendAsync(i);
         }
-
-        /*
-         * [startChannel] -> [heavyOperationChannel] -> [endChannel]
-         */
-        startBlock.LinkTo(heavyOperationBlock, linkOptions);
-        heavyOperationBlock.LinkTo(endBlock, linkOptions);
 
         try
         {

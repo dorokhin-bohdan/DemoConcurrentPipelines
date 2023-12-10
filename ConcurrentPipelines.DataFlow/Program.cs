@@ -2,8 +2,8 @@
 
 #region SimplePipeline
 
-//Console.WriteLine("Simple DataFlow Pipeline");
-//await new SimplePipeline().RunAsync();
+Console.WriteLine("Simple DataFlow Pipeline");
+await new SimplePipeline().RunAsync();
 
 #endregion
 
@@ -16,8 +16,8 @@
 
 #region CancelablePipeline
 
-Console.WriteLine("Cancelable DataFlow Pipeline");
-await new CancelablePipeline().RunAsync();
+//Console.WriteLine("Cancelable DataFlow Pipeline");
+//await new CancelablePipeline().RunAsync();
 
 #endregion
 
