@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+	<PackageReference Update="System.Threading.Tasks.Dataflow" Version="8.0.*" />
+	<PackageReference Update="SixLabors.ImageSharp" Version="3.1.*" />
+	<PackageReference Update="Spectre.Console" Version="0.48.*" />
+	<PackageReference Update="BenchmarkDotNet" Version="0.13.*" />
+  </ItemGroup>
+</Project>
