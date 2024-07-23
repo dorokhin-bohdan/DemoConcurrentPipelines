@@ -17,9 +17,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{917F37
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcurrentPipelines.Channels", "ConcurrentPipelines.Channels\ConcurrentPipelines.Channels.csproj", "{8FA93607-D334-479C-B919-55FB8D271819}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentPipelines.Benchmarks.DataFlow", "ConcurrentPipelines.Benchmarks.DataFlow\ConcurrentPipelines.Benchmarks.DataFlow.csproj", "{53F1FA03-431F-40B5-9701-30BF82AE39BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcurrentPipelines.Benchmarks.DataFlow", "ConcurrentPipelines.Benchmarks.DataFlow\ConcurrentPipelines.Benchmarks.DataFlow.csproj", "{53F1FA03-431F-40B5-9701-30BF82AE39BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentPipelines.Benchmarks.Channels", "ConcurrentPipelines.Benchmarks.Channels\ConcurrentPipelines.Benchmarks.Channels.csproj", "{16636783-5222-4EB6-9F75-0734A531BBC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcurrentPipelines.Benchmarks.Channels", "ConcurrentPipelines.Benchmarks.Channels\ConcurrentPipelines.Benchmarks.Channels.csproj", "{16636783-5222-4EB6-9F75-0734A531BBC7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".global", ".global", "{D0F80EF4-B50A-4EE4-8974-D2D5C9CB3870}"
+	ProjectSection(SolutionItems) = preProject
+		Packages.props = Packages.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
